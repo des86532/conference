@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detective Game: The Bug Hunt</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --accent-color: #06b6d4;
+            /* Cyan */
+            --danger-color: #ef4444;
+            /* Red */
+            --secondary-bg: #1e293b;
+            --border-color: #334155;
+            --font-mono: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+            font-family: var(--font-mono);
+        }
+
+        .case-files {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .case-btn {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .case-btn:hover,
+        .case-btn.active {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .case-study {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+            display: none;
+            /* Hidden by default */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-study.active {
+            display: block;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .case-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .case-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            font-family: var(--font-mono);
+        }
+
+        .case-brief {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-left: 4px solid var(--accent-color);
+            margin-bottom: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+        }
+
+        /* Case 1 Styles */
+        .suspect-btn {
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: transform 0.1s;
+        }
+
+        .suspect-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Case 2 Styles */
+        .cls-container {
+            border: 1px dashed var(--border-color);
+            padding: 1rem;
+            min-height: 300px;
+        }
+
+        .ad-slot {
+            background: #475569;
+            /* Height intentionally missing for CLS */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+        }
+
+        .reading-content {
+            line-height: 1.6;
+        }
+
+        /* Case 3 Styles */
+        .analytics-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .chart-placeholder {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .collect-btn {
+            background-color: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            padding: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Utilities */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🕵️ Detective Game: DEBUGS</h1>
+
+    <div class="case-files">
+        <button class="case-btn active" onclick="switchCase(1)">Case #1: Vanishing Click</button>
+        <button class="case-btn" onclick="switchCase(2)">Case #2: Shifting Evidence</button>
+        <button class="case-btn" onclick="switchCase(3)">Case #3: Memory Thief</button>
+    </div>
+
+    <!-- Case 1: Event Propagation -->
+    <div id="case-1" class="case-study active">
+        <div class="case-header">
+            <span class="case-title">Case #1: The Vanishing Click</span>
+            <span style="color: var(--danger-color)">STATUS: UNSOLVED</span>
+        </div>
+        <div class="case-brief">
+            <p><strong>REPORT:</strong> The "ARREST SUSPECT" button is critical for our operations. However, agents
+                field report that clicking it does absolutely nothing. No errors in the console.</p>
+            <p><strong>MISSION:</strong> Find out what is intercepting our click events.</p>
+        </div>
+
+        <div style="text-align: center; padding: 2rem;">
+            <button id="arrest-btn" class="suspect-btn">🚨 ARREST SUSPECT 🚨</button>
+            <p id="success-msg" style="margin-top: 1rem; color: #4ade80; display: none;">Suspect Arrested Successfully!
+            </p>
+        </div>
+    </div>
+
+    <!-- Case 2: CLS -->
+    <div id="case-2" class="case-study">
+        <div class="case-header">
+            <span class="case-title">Case #2: The Shifting Evidence</span>
+            <span style="color: var(--danger-color)">STATUS: UNSTABLE</span>
+        </div>
+        <div class="case-brief">
+            <p><strong>REPORT:</strong> Witnesses claim the evidence report keeps "jumping around" while they try to
+                read it. It's disorienting and unprofessional.</p>
+            <p><strong>MISSION:</strong> Identify the cause of the Layout Shift.</p>
+        </div>
+
+        <div class="cls-container">
+            <div id="dynamic-ad"></div> <!-- The Culprit -->
+            <div class="reading-content">
+                <h3>Fingerprint Analysis Report</h3>
+                <p>Establishing a positive match requires comparing the minutiae points of the latent print with the
+                    exemplar print. Common minutiae include ridge endings, bifurcations, and short ridges.</p>
+                <p>Our initial scan suggests a 98% match with the suspect in custody. However, we need to verify the
+                    chain of custody before proceeding with the indictment.</p>
+                <button style="padding: 0.5rem; margin-top: 1rem;">View Full Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case 3: Memory Leak -->
+    <div id="case-3" class="case-study">
+        <div class="case-header">
+            <span class="case-title">Case #3: The Memory Thief</span>
+            <span style="color: var(--danger-color)">STATUS: CRITICAL</span>
+        </div>
+        <div class="case-brief">
+            <p><strong>REPORT:</strong> Our surveillance system becomes sluggish after running for just a few minutes.
+                It eventually crashes the browser tab.</p>
+            <p><strong>MISSION:</strong> Find the leak using the Memory Profiler.</p>
+        </div>
+
+        <div class="analytics-dashboard">
+            <div style="grid-column: 1 / -1;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>System Resources:</span>
+                    <span id="memory-stat">Stable</span>
+                </div>
+                <div style="background: #334155; height: 10px; border-radius: 5px; overflow: hidden;">
+                    <div id="memory-bar" style="width: 5%; height: 100%; background: #4ade80; transition: width 0.2s;">
+                    </div>
+                </div>
+            </div>
+
+            <div style="grid-column: 1 / -1; text-align: center;">
+                <button id="start-surveillance" class="collect-btn">🔴 START SURVEILLANCE</button>
+                <button id="stop-surveillance" class="collect-btn"
+                    style="background-color: var(--danger-color); display: none;">⬛ STOP SURVEILLANCE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Navigation Logic ---
+        function switchCase(caseId) {
+            document.querySelectorAll('.case-study').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.case-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById(`case-${caseId}`).classList.add('active');
+            document.querySelector(`.case-btn:nth-child(${caseId})`).classList.add('active');
+
+            // Reset Case 2 on switch
+            if (caseId === 2) resetCase2();
+        }
+
+        // --- Case 1: The Invisible Wall (Event Propagation) ---
+        const arrestBtn = document.getElementById('arrest-btn');
+        const successMsg = document.getElementById('success-msg');
+
+        // The expected behavior
+        arrestBtn.addEventListener('click', () => {
+            successMsg.style.display = 'block';
+            arrestBtn.textContent = '🔒 SUSPECT SECURED';
+            arrestBtn.style.backgroundColor = '#4ade80'; // Green
+        });
+
+        // The IMPOSSIBLE TO FIND bug (Capture phase stopper)
+        // This simulates a third-party analytics script or a bad framework interaction
+        document.body.addEventListener('click', (e) => {
+            // Only targets specific elements to be extra annoying/sneaky
+            if (e.target.classList.contains('suspect-btn')) {
+                e.stopPropagation(); // The crime!
+                console.log('🕵️ [BLOCKED] "Global Security Protocol" intercepted a click event.');
+            }
+        }, true); // useCapture = true makes this happen BEFORE the button's bubble listener
+
+
+        // --- Case 2: The Shifting Evidence (CLS) ---
+        function resetCase2() {
+            const adSlot = document.getElementById('dynamic-ad');
+            adSlot.innerHTML = '';
+            adSlot.style.height = '0px'; // Reset height
+
+            // Introduce layout shift after a delay
+            setTimeout(() => {
+                const img = document.createElement('img');
+                img.src = 'https://placehold.co/600x200/06b6d4/ffffff?text=EVIDENCE+IMAGE';
+                // CRUCIAL: Missing width/height attributes causes CLS
+                // img.width = 600; 
+                // img.height = 200;
+
+                adSlot.appendChild(img);
+                // Force a layout shift
+                adSlot.style.height = 'auto';
+            }, 1500);
+        }
+        // Initialize if starting on tab 2 (unlikely but good practice)
+        // resetCase2();
+
+
+        // --- Case 3: The Memory Thief (Memory Leak) ---
+        let surveillanceInterval;
+        const memoryBar = document.getElementById('memory-bar');
+        const memoryStat = document.getElementById('memory-stat');
+
+        // The Memory Leak: Global storage to prevent GC
+        window.evidenceLocker = [];
+
+        document.getElementById('start-surveillance').addEventListener('click', function () {
+            this.style.display = 'none';
+            document.getElementById('stop-surveillance').style.display = 'inline-block';
+
+            surveillanceInterval = setInterval(() => {
+                // 1. Create large objects
+                const fragment = new Array(10000).fill('Suspicious Activity Log Entry #' + Math.random());
+
+                // 2. Cyclic reference / Closure trap (optional, but array push is enough for demo)
+                const evidence = {
+                    id: Date.now(),
+                    data: fragment,
+                    timestamp: new Date()
+                };
+
+                // 3. Store in global array (The Leak)
+                window.evidenceLocker.push(evidence);
+
+                // Visual Feedback
+                const fakeUsage = Math.min(100, window.evidenceLocker.length / 5); // 500 pushes = 100%
+                memoryBar.style.width = `${fakeUsage}%`;
+
+                if (fakeUsage > 80) {
+                    memoryBar.style.backgroundColor = '#ef4444';
+                    memoryStat.textContent = 'CRITICAL: MEMORY OVERLOAD';
+                } else {
+                    memoryStat.textContent = `Recording Evidence... (${window.evidenceLocker.length} items)`;
+                }
+
+            }, 50); // Fast interval
+        });
+
+        document.getElementById('stop-surveillance').addEventListener('click', function () {
+            clearInterval(surveillanceInterval);
+            this.style.display = 'none';
+            document.getElementById('start-surveillance').style.display = 'inline-block';
+            memoryStat.textContent = 'Paused. (Leak persists until reload)';
+        });
+
+    </script>
+</body>
+
+</html>
