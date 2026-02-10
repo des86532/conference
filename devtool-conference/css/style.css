@@ -1,0 +1,424 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==================== Stitch UI Custom Styles ==================== */
+.grid-bg {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+.dark .grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+}
+
+.light .grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
+.bomb-shadow {
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5));
+}
+
+.neon-text-green {
+  text-shadow: 0 0 5px #39ff14, 0 0 10px #39ff14;
+}
+
+.neon-text-orange {
+  text-shadow: 0 0 5px #ff6600, 0 0 10px #ff6600;
+}
+
+.glitch {
+  position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.glitch::before {
+  left: 2px;
+  text-shadow: -1px 0 #ff00c1;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+  left: -2px;
+  text-shadow: -1px 0 #00fff9;
+  clip: rect(44px, 450px, 56px, 0);
+  animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% {
+    clip: rect(61px, 9999px, 52px, 0);
+  }
+
+  5% {
+    clip: rect(33px, 9999px, 14px, 0);
+  }
+
+  10% {
+    clip: rect(96px, 9999px, 83px, 0);
+  }
+
+  15% {
+    clip: rect(4px, 9999px, 93px, 0);
+  }
+
+  20% {
+    clip: rect(22px, 9999px, 6px, 0);
+  }
+
+  25% {
+    clip: rect(68px, 9999px, 34px, 0);
+  }
+
+  30% {
+    clip: rect(10px, 9999px, 62px, 0);
+  }
+
+  35% {
+    clip: rect(55px, 9999px, 9px, 0);
+  }
+
+  40% {
+    clip: rect(1px, 9999px, 42px, 0);
+  }
+
+  45% {
+    clip: rect(33px, 9999px, 78px, 0);
+  }
+
+  50% {
+    clip: rect(82px, 9999px, 21px, 0);
+  }
+
+  55% {
+    clip: rect(94px, 9999px, 64px, 0);
+  }
+
+  60% {
+    clip: rect(38px, 9999px, 3px, 0);
+  }
+
+  65% {
+    clip: rect(16px, 9999px, 88px, 0);
+  }
+
+  70% {
+    clip: rect(74px, 9999px, 57px, 0);
+  }
+
+  75% {
+    clip: rect(2px, 9999px, 19px, 0);
+  }
+
+  80% {
+    clip: rect(88px, 9999px, 46px, 0);
+  }
+
+  85% {
+    clip: rect(51px, 9999px, 27px, 0);
+  }
+
+  90% {
+    clip: rect(11px, 9999px, 95px, 0);
+  }
+
+  95% {
+    clip: rect(63px, 9999px, 13px, 0);
+  }
+
+  100% {
+    clip: rect(40px, 9999px, 71px, 0);
+  }
+}
+
+@keyframes glitch-anim2 {
+  0% {
+    clip: rect(2px, 9999px, 19px, 0);
+  }
+
+  5% {
+    clip: rect(88px, 9999px, 46px, 0);
+  }
+
+  10% {
+    clip: rect(51px, 9999px, 27px, 0);
+  }
+
+  15% {
+    clip: rect(11px, 9999px, 95px, 0);
+  }
+
+  20% {
+    clip: rect(63px, 9999px, 13px, 0);
+  }
+
+  25% {
+    clip: rect(40px, 9999px, 71px, 0);
+  }
+
+  30% {
+    clip: rect(61px, 9999px, 52px, 0);
+  }
+
+  35% {
+    clip: rect(33px, 9999px, 14px, 0);
+  }
+
+  40% {
+    clip: rect(96px, 9999px, 83px, 0);
+  }
+
+  45% {
+    clip: rect(4px, 9999px, 93px, 0);
+  }
+
+  50% {
+    clip: rect(22px, 9999px, 6px, 0);
+  }
+
+  55% {
+    clip: rect(68px, 9999px, 34px, 0);
+  }
+
+  60% {
+    clip: rect(10px, 9999px, 62px, 0);
+  }
+
+  65% {
+    clip: rect(55px, 9999px, 9px, 0);
+  }
+
+  70% {
+    clip: rect(1px, 9999px, 42px, 0);
+  }
+
+  75% {
+    clip: rect(33px, 9999px, 78px, 0);
+  }
+
+  80% {
+    clip: rect(82px, 9999px, 21px, 0);
+  }
+
+  85% {
+    clip: rect(94px, 9999px, 64px, 0);
+  }
+
+  90% {
+    clip: rect(38px, 9999px, 3px, 0);
+  }
+
+  95% {
+    clip: rect(16px, 9999px, 88px, 0);
+  }
+
+  100% {
+    clip: rect(74px, 9999px, 57px, 0);
+  }
+}
+
+/* ==================== Villain Styles ==================== */
+.villain-silhouette {
+  mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+}
+
+.villain-eye {
+  box-shadow: 0 0 10px #39ff14;
+}
+
+/* ==================== DevTool Conference Game Elements ==================== */
+
+/* Wires */
+.wires-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 20px 0;
+  perspective: 1000px;
+}
+
+.wire {
+  position: relative;
+  width: 60px;
+  height: 180px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.wire:hover {
+  transform: scale(1.1) translateZ(20px);
+}
+
+.wire-line {
+  width: 12px;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.wire-line::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 100%;
+  height: 200%;
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.5), transparent);
+  animation: wireShine 3s linear infinite;
+}
+
+@keyframes wireShine {
+  0% {
+    top: -50%;
+  }
+
+  100% {
+    top: 100%;
+  }
+}
+
+.wire.red .wire-line {
+  background: linear-gradient(180deg, #ff4757 0%, #8b0000 100%);
+}
+
+.wire.blue .wire-line {
+  background: linear-gradient(180deg, #5352ed 0%, #00008b 100%);
+}
+
+.wire.yellow .wire-line {
+  background: linear-gradient(180deg, #ffd700 0%, #ff8800 100%);
+}
+
+.wire-label {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-shadow: 0 0 5px currentColor;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.wire.red .wire-label {
+  color: #ff4757;
+}
+
+.wire.blue .wire-label {
+  color: #5352ed;
+}
+
+.wire.yellow .wire-label {
+  color: #ffd700;
+}
+
+/* Rotating Element (Performance Task) */
+.rotating-element {
+  width: 100px;
+  height: 100px;
+  margin: 20px auto;
+  border: 4px solid #39ff14;
+  border-radius: 50%;
+  position: relative;
+  opacity: 0.7;
+  /* Intentionally use non-hardware accelerated properties for performance testing */
+  will-change: margin-top;
+}
+
+.rotating-element::before {
+  content: '⚡';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 2rem;
+}
+
+/* Challenge List Styles */
+.challenge-item {
+  transition: all 0.3s ease;
+}
+
+.challenge-item.completed {
+  border-left-color: #4caf50;
+  opacity: 0.6;
+}
+
+.challenge-item.completed::before {
+  content: '✓ ';
+  /* Removed explicit color to inherit from parent */
+  color: #4caf50;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+/* Hint Box */
+.hint-box {
+  display: none;
+  animation: slideIn 0.5s ease;
+}
+
+.hint-box.active {
+  display: block;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Message */
+.message {
+  display: none;
+  animation: bounceIn 0.6s ease;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.05);
+  }
+
+  70% {
+    transform: scale(0.9);
+  }
+
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.message.active {
+  display: block;
+}
