@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💣 DevTools 拆彈演練 | Chrome DevTools Challenge</title>
+    <meta name="description" content="透過五個關卡學習 Chrome DevTools 的強大功能。挑戰你的除錯技巧！">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #00ff41;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 背景動畫效果 */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 標題區域 */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            animation: fadeInDown 1s ease;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41;
+            animation: pulse 2s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            color: #ff4757;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px #ff4757;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 主遊戲區域 */
+        .game-board {
+            background: rgba(10, 10, 10, 0.8);
+            border: 2px solid #00ff41;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.3), inset 0 0 20px rgba(0, 255, 65, 0.1);
+            margin-bottom: 30px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 計時器顯示 */
+        .timer-display {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .timer-display .status {
+            font-size: 2rem;
+            color: #ff4757;
+            text-shadow: 0 0 15px #ff4757;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.5; }
+        }
+
+        /* 電線區域 */
+        .wires-container {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 40px 0;
+            perspective: 1000px;
+        }
+
+        .wire {
+            position: relative;
+            width: 80px;
+            height: 300px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .wire:hover {
+            transform: scale(1.1) translateZ(20px);
+        }
+
+        .wire-line {
+            width: 10px;
+            height: 100%;
+            margin: 0 auto;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wire-line::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 0;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: wireShine 3s linear infinite;
+        }
+
+        @keyframes wireShine {
+            0% { top: -50%; }
+            100% { top: 100%; }
+        }
+
+        .wire.red .wire-line { background: linear-gradient(180deg, #ff4757 0%, #8b0000 100%); }
+        .wire.blue .wire-line { background: linear-gradient(180deg, #5352ed 0%, #00008b 100%); }
+        .wire.yellow .wire-line { background: linear-gradient(180deg, #ffd700 0%, #ff8800 100%); }
+
+        .wire-label {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .wire.red .wire-label { color: #ff4757; }
+        .wire.blue .wire-label { color: #5352ed; }
+        .wire.yellow .wire-label { color: #ffd700; }
+
+        /* 關卡資訊 */
+        .challenge-info {
+            background: rgba(0, 255, 65, 0.05);
+            border: 1px solid #00ff41;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .challenge-info h2 {
+            color: #00ff41;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .challenge-item {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #00ff41;
+            transition: all 0.3s ease;
+        }
+
+        .challenge-item:hover {
+            transform: translateX(10px);
+            background: rgba(0, 255, 65, 0.1);
+        }
+
+        .challenge-item.completed {
+            border-left-color: #2ecc71;
+            opacity: 0.6;
+        }
+
+        .challenge-item.completed::before {
+            content: '✓ ';
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        /* 按鈕樣式 */
+        .btn {
+            background: linear-gradient(135deg, #00ff41 0%, #00cc33 100%);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 255, 65, 0.4);
+            text-transform: uppercase;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 255, 65, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff4757 0%, #cc0000 100%);
+            box-shadow: 0 5px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        .btn-danger:hover {
+            box-shadow: 0 8px 30px rgba(255, 71, 87, 0.6);
+        }
+
+        .btn-hint {
+            background: linear-gradient(135deg, #5352ed 0%, #3742fa 100%);
+            box-shadow: 0 5px 20px rgba(83, 82, 237, 0.4);
+            margin-right: 10px;
+        }
+
+        .btn-hint:hover {
+            box-shadow: 0 8px 30px rgba(83, 82, 237, 0.6);
+        }
+
+        .controls {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        /* 提示框 */
+        .hint-box {
+            display: none;
+            background: rgba(83, 82, 237, 0.1);
+            border: 2px solid #5352ed;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            animation: slideIn 0.5s ease;
+        }
+
+        .hint-box.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hint-box h3 {
+            color: #5352ed;
+            margin-bottom: 10px;
+        }
+
+        .hint-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .hint-box li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(83, 82, 237, 0.2);
+        }
+
+        .hint-box li:last-child {
+            border-bottom: none;
+        }
+
+        /* 旋轉動畫元素（第三關效能問題） */
+        .rotating-element {
+            width: 150px;
+            height: 150px;
+            margin: 30px auto;
+            border: 5px solid #00ff41;
+            border-radius: 50%;
+            position: relative;
+            /* 故意使用會觸發 reflow 的動畫 */
+        }
+
+        .rotating-element::before {
+            content: '⚡';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+        }
+
+        /* 成功/失敗訊息 */
+        .message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-size: 1.5rem;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .message.success {
+            background: rgba(46, 204, 113, 0.2);
+            border: 2px solid #2ecc71;
+            color: #2ecc71;
+        }
+
+        .message.error {
+            background: rgba(255, 71, 87, 0.2);
+            border: 2px solid #ff4757;
+            color: #ff4757;
+        }
+
+        .message.active {
+            display: block;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .wires-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 30px;
+            }
+
+            .wire {
+                height: 200px;
+            }
+
+            .game-board {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>💣 DevTools 拆彈演練</h1>
+            <p class="subtitle">⚠️ BOMB DISPOSAL TRAINING ⚠️</p>
+        </div>
+
+        <div class="game-board">
+            <!-- 計時器顯示 -->
+            <div class="timer-display">
+                <div class="status">⚠️ SYSTEM_OFFLINE ⚠️</div>
+                <p style="margin-top: 10px; color: #888;">真實計時器隱藏中... 使用 DevTools 找出它！</p>
+            </div>
+
+            <!-- 電線 -->
+            <div class="wires-container">
+                <div class="wire red">
+                    <div class="wire-line"></div>
+                    <div class="wire-label">紅線</div>
+                </div>
+                <div class="wire blue">
+                    <div class="wire-line"></div>
+                    <div class="wire-label">藍線</div>
+                </div>
+                <div class="wire yellow">
+                    <div class="wire-line"></div>
+                    <div class="wire-label">黃線</div>
+                </div>
+            </div>
+
+            <!-- 旋轉元素（效能問題） -->
+            <div class="rotating-element"></div>
+
+            <!-- 關卡資訊 -->
+            <div class="challenge-info">
+                <h2>🎯 五大挑戰關卡</h2>
+                <div class="challenge-item" data-challenge="1">
+                    <strong>關卡一：隱形計時器</strong> - 使用 Console 找出隱藏的計時器
+                </div>
+                <div class="challenge-item" data-challenge="2">
+                    <strong>關卡二：三種資料庫的碎片</strong> - 在 Application 面板找出三條密碼
+                </div>
+                <div class="challenge-item" data-challenge="3">
+                    <strong>關卡三：渲染壓力測試</strong> - 使用 Performance 找出效能問題
+                </div>
+                <div class="challenge-item" data-challenge="4">
+                    <strong>關卡四：網路雜訊過濾</strong> - 在 Network 面板找到真正的設定檔
+                </div>
+                <div class="challenge-item" data-challenge="5">
+                    <strong>關卡五：邏輯劫持</strong> - 使用 Sources 修正程式邏輯
+                </div>
+            </div>
+
+            <!-- 提示框 -->
+            <div class="hint-box" id="hintBox">
+                <h3>💡 提示系統</h3>
+                <ul id="hintList"></ul>
+            </div>
+
+            <!-- 訊息顯示 -->
+            <div class="message" id="message"></div>
+
+            <!-- 控制按鈕 -->
+            <div class="controls">
+                <button class="btn btn-hint" onclick="toggleHints()">💡 顯示提示</button>
+                <button class="btn btn-danger" onclick="defuseBomb()">🔧 拆除炸彈</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== 第一關：Console 面板 ====================
+        // 定義全域變數，畫面顯示 OFFLINE，但實際計時器在背景執行
+        window.game = {
+            timeLeft: 900, // 15 分鐘
+            status: "Active"
+        };
+
+        // 真實的計時器在背景執行（每秒減少）
+        setInterval(() => {
+            if (window.game.timeLeft > 0) {
+                window.game.timeLeft--;
+            }
+        }, 1000);
+
+        console.log('🎮 歡迎來到 DevTools 拆彈演練！');
+        console.log('💡 提示：使用 Live Expression 監控 window.game.timeLeft 來查看真實的倒數計時！');
+
+        // ==================== 第二關：Application 面板 ====================
+        // 初始化三種儲存方式
+        function initStorage() {
+            // Cookie
+            document.cookie = "Fragment_1=RedWire; path=/";
+            
+            // LocalStorage
+            localStorage.setItem('Fragment_2', 'BlueWire');
+            
+            // IndexedDB
+            const request = indexedDB.open('SecurityDB', 1);
+            
+            request.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains('Secrets')) {
+                    db.createObjectStore('Secrets', { keyPath: 'id' });
+                }
+            };
+            
+            request.onsuccess = function(event) {
+                const db = event.target.result;
+                const transaction = db.transaction(['Secrets'], 'readwrite');
+                const store = transaction.objectStore('Secrets');
+                store.put({ id: 1, text: 'YellowWire' });
+                console.log('💾 密碼碎片已分散儲存在三個地方...');
+            };
+            
+            request.onerror = function() {
+                console.error('❌ IndexedDB 初始化失敗');
+            };
+        }
+
+        // ==================== 第三關：Performance 面板 ====================
+        // 故意製造效能問題
+        const rotatingElement = document.querySelector('.rotating-element');
+        let angle = 0;
+
+        // 使用會觸發 Reflow 的屬性（margin-top）而非 transform
+        setInterval(() => {
+            angle = (angle + 1) % 360;
+            // 故意使用 margin 來觸發 layout reflow
+            rotatingElement.style.marginTop = Math.sin(angle * Math.PI / 180) * 5 + 'px';
+        }, 16);
+
+        // 製造 Long Task
+        function heavyDuty() {
+            const start = Date.now();
+            // 佔用 CPU 約 150ms
+            while (Date.now() - start < 150) {
+                Math.sqrt(Math.random());
+            }
+        }
+
+        setInterval(heavyDuty, 1000);
+
+        // ==================== 第四關：Network 面板 ====================
+        // 每 200ms 發送無用的 heartbeat 請求（洗版）
+        setInterval(() => {
+            fetch('https://jsonplaceholder.typicode.com/posts/1')
+                .then(response => response.json())
+                .catch(() => {});
+        }, 200);
+
+        // 真正的設定檔（延遲載入）
+        let configData = null;
+        setTimeout(() => {
+            fetch('https://jsonplaceholder.typicode.com/users/1')
+                .then(response => response.json())
+                .then(data => {
+                    configData = data;
+                    // 隱藏密碼在 response 中
+                    configData.secretPassword = 'DevTools2026';
+                    console.log('🔐 設定檔已載入（檢查 Network 面板找出正確的請求）');
+                })
+                .catch(err => console.error('載入設定檔失敗:', err));
+        }, 2000);
+
+        // ==================== 第五關：Sources 面板 ====================
+        // 拆彈函式（有邏輯錯誤）
+        function defuseBomb() {
+            const userCode = prompt('請輸入最終密碼（提示：檢查 config 中的 secretPassword）：');
+            const secretCode = 'DevTools2026';
+            
+            // 故意加入 && false，讓條件永遠不成立
+            // 學員需要使用 Breakpoint 或 Local Overrides 來修正
+            if (userCode === secretCode && false) {
+                showMessage('success', '🎉 拆彈成功！你已經掌握了 Chrome DevTools 的所有技巧！');
+                document.querySelector('.timer-display .status').textContent = '✅ BOMB DEFUSED';
+                document.querySelector('.timer-display .status').style.color = '#2ecc71';
+                markAllChallengesComplete();
+            } else {
+                showMessage('error', '❌ 密碼錯誤或邏輯有問題... 使用 Sources 面板設置中斷點檢查！');
+            }
+        }
+
+        // ==================== 輔助函式 ====================
+        const hints = {
+            1: '開啟 Console，使用 Live Expression 輸入 "window.game.timeLeft" 監控計時器',
+            2: '開啟 Application 面板，依序檢查 Cookies、Local Storage、IndexedDB > SecurityDB > Secrets',
+            3: '開啟 Rendering 面板啟用 "Paint flashing"，並用 Performance 錄製找出 Long Task',
+            4: '開啟 Network 面板，使用 Throttling 模擬慢速網路，找出非 heartbeat 的請求',
+            5: '開啟 Sources 面板，在 defuseBomb 函式設置中斷點，或使用 Local Overrides 移除 "&& false"'
+        };
+
+        function toggleHints() {
+            const hintBox = document.getElementById('hintBox');
+            const hintList = document.getElementById('hintList');
+            
+            if (hintBox.classList.contains('active')) {
+                hintBox.classList.remove('active');
+            } else {
+                hintList.innerHTML = '';
+                for (let i = 1; i <= 5; i++) {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>關卡 ${i}：</strong> ${hints[i]}`;
+                    hintList.appendChild(li);
+                }
+                hintBox.classList.add('active');
+            }
+        }
+
+        function showMessage(type, text) {
+            const messageEl = document.getElementById('message');
+            messageEl.className = `message ${type} active`;
+            messageEl.textContent = text;
+            
+            setTimeout(() => {
+                messageEl.classList.remove('active');
+            }, 5000);
+        }
+
+        function markChallengeComplete(num) {
+            const item = document.querySelector(`[data-challenge="${num}"]`);
+            if (item) {
+                item.classList.add('completed');
+            }
+        }
+
+        function markAllChallengesComplete() {
+            for (let i = 1; i <= 5; i++) {
+                markChallengeComplete(i);
+            }
+        }
+
+        // 頁面載入完成後初始化
+        window.addEventListener('DOMContentLoaded', () => {
+            initStorage();
+            console.log('🚀 系統已啟動！開始你的 DevTools 挑戰之旅！');
+        });
+    </script>
+</body>
+</html>
