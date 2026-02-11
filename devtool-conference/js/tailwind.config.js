@@ -9,7 +9,7 @@ module.exports = {
     screens: {
       'sm': '640px',
       'md': '768px', // Default md
-      'lg': '720px', // Custom override: Desktop starts at 720px
+      'lg': '640px', // Custom override: Desktop starts at 720px
       'xl': '1280px',
       '2xl': '1536px',
     },
