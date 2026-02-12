@@ -104,7 +104,7 @@
             <div class="lg:col-span-1 flex flex-col items-center justify-center relative order-1 lg:order-2 w-full">
                 <!-- Bomb Visual -->
                 <div class="relative w-32 h-32 md:w-56 md:h-56 lg:w-72 lg:h-72 animate-float mb-4 lg:mb-6">
-                    <div class="absolute top-0 right-[25%] z-20 transform -translate-y-1/2 translate-x-1/2">
+                    <div class="absolute top-0 right-[25%] z-20 transform -translate-y-1/2 translate-x-1/2" id="fuse-spark">
                         <div class="relative w-6 h-6 lg:w-8 lg:h-8">
                             <div class="absolute inset-0 bg-yellow-400 rounded-full blur-md animate-pulse-fast"></div>
                             <div class="absolute inset-1 bg-white rounded-full blur-sm"></div>
@@ -297,9 +297,9 @@
     </main>
 
     <!-- Knowledge Modal -->
-    <div id="knowledge-modal"
+    <div id="knowledge-modal" onclick="closeModalOnBackdrop(event)"
         class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm transition-opacity duration-300 opacity-0 pointer-events-none">
-        <div
+        <div onclick="event.stopPropagation()"
             class="bg-[#161b22] border border-blue-500/50 rounded-xl max-w-2xl w-full shadow-[0_0_50px_rgba(59,130,246,0.2)] transform transition-transform duration-300 scale-95 p-6 relative overflow-hidden">
             <!-- Close Button -->
             <button onclick="closeModal()"

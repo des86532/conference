@@ -1,6 +1,11 @@
 // ==================== Game Initialization ====================
 console.log('🚀 系統初始化完成. 任務開始.');
 
+// === Voice Audio System ===
+const sceneAudio = new Audio();
+sceneAudio.preload = 'auto';
+sceneAudio.volume = 1.0;
+
 // Helper for selecting elements
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector); // For multiple lists
@@ -79,7 +84,7 @@ const story = [
     },
     {
         id: 8,
-        text: "你應該已經被那些 <span class='text-red-400'>404 錯誤</span> 煩死了吧？<br>試著在 <span class='text-green-400 font-bold'>Network 面板</span> 裡 <span class='text-green-400'>過濾雜訊</span>... 找到成功的請求，它會告訴你下一步該怎麼做...",
+        text: "你應該已經被那些 <span class='text-green-400'>雜訊請求</span> 煩死了吧？<br>試著在 <span class='text-green-400 font-bold'>Network 面板</span> 裡 <span class='text-green-400'>過濾雜訊</span>... 找到成功的請求，它會告訴你下一步該怎麼做...",
         autoNext: false  // 不設 triggerLevel，讓使用者有時間看提示
     },
     {
@@ -118,6 +123,14 @@ function updateVillainMessage(text) {
     
     if (desktopMsg) desktopMsg.innerHTML = formattedText;
     if (mobileMsg) mobileMsg.innerHTML = formattedText;
+}
+
+function playSceneAudio(scene) {
+    if (!scene || scene.id === undefined || scene.id === null) return;
+    sceneAudio.pause();
+    sceneAudio.currentTime = 0;
+    sceneAudio.src = `/audio/id-${scene.id}.mp3`;
+    sceneAudio.play().catch(() => {});
 }
 
 function logSceneHints(sceneId) {
@@ -163,7 +176,7 @@ function logSceneHints(sceneId) {
             console.log('%c使用 Local Overrides 來改寫 API response！', 'color: #60a5fa; font-size: 14px;');
             console.log('%c步驟:', 'color: #a78bfa; font-size: 14px;');
             console.log('%c  1. Sources 面板 → Overrides → Enable Local Overrides', 'color: #10b981; font-size: 13px;');
-            console.log('%c  2. Network 面板 → 找到失敗的 API → 右鍵 → Override content', 'color: #10b981; font-size: 13px;');
+            console.log('%c  2. Network 面板 → 找到目標 API → 右鍵 → Override content', 'color: #10b981; font-size: 13px;');
             console.log('%c  3. 編輯內容讓 API 成功返回（參考提示檔的說明）', 'color: #10b981; font-size: 13px;');
             console.log('%c  4. 重新載入頁面，看看會發生什麼...', 'color: #fbbf24; font-size: 14px; font-weight: bold;');
             break;
@@ -234,6 +247,10 @@ function syncNavigation() {
 function handleSceneEntry(scene) {
     if (!scene) return;
     updateVillainMessage(scene.text);
+    
+    // === 自動播放對話音檔 ===
+    playSceneAudio(scene);
+    
     if (!sceneHintsShown.has(scene.id)) {
         sceneHintsShown.add(scene.id);
         logSceneHints(scene.id);
@@ -299,13 +316,23 @@ const challenges = [
         fragment: 'Dev',
         completed: false,
         hint: '開啟 Console，點擊眼睛圖示 (Create Live Expression)，輸入 "window.game.timer"',
-        knowledge: `<h2 class="text-2xl font-bold text-blue-400 mb-4">Console: Live Expressions</h2>
-                    <p class="text-gray-300 mb-4">Live Expressions 允許你即時監控 JavaScript 表達式的值，而不用重複在 Console 輸入。</p>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>點擊 Console 左上角的眼睛圖示 👁️</li>
-                        <li>輸入變數名稱或運算式</li>
-                        <li>數值會隨著系統狀態自動更新</li>
-                    </ul>`
+        knowledge: `
+            <h2 class="text-2xl font-bold text-blue-400 mb-4">Console: Live Expressions</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
+                <p class="text-gray-400">Console 是瀏覽器的即時 JavaScript 執行環境（REPL），可用於調試、監控變數、執行測試代碼。Live Expressions 功能允許即時監控表達式的值，無需重複輸入指令。</p>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <ul class="list-disc list-inside text-gray-400 space-y-1">
+                    <li><strong>vs Sources 斷點：</strong>Console 不需中斷程式執行，適合即時查看</li>
+                    <li><strong>vs Performance 面板：</strong>Console 只顯示當前值，不記錄歷史軌跡</li>
+                    <li><strong>vs Network 面板：</strong>Console 用於查看程式內部狀態，而非網路請求</li>
+                </ul>
+            </div>
+        `
     },
     { 
         id: 2, 
@@ -316,14 +343,24 @@ const challenges = [
         fragment: 'Tools', 
         completed: false, 
         hint: '密碼碎片分散在 4 個儲存位置：Cookies、Local Storage、Session Storage、IndexedDB。收集 4 個提示並組合成完整碎片，然後呼叫 window.game.verifyLevel2("碎片") 驗證',
-        knowledge: `<h2 class="text-2xl font-bold text-purple-400 mb-4">Application Panel</h2>
-                    <p class="text-gray-300 mb-4">此面板用於檢視和管理網頁應用程式的儲存空間。</p>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li><strong>Cookies:</strong> HTTP 請求攜帶的小型數據，可設定過期時間</li>
-                        <li><strong>Local Storage:</strong> 持久的本機儲存空間（5-10MB）</li>
-                        <li><strong>Session Storage:</strong> 僅在當前分頁有效的暫存</li>
-                        <li><strong>IndexedDB:</strong> 瀏覽器端的 NoSQL 資料庫，支援複雜查詢</li>
-                    </ul>`
+        knowledge: `
+            <h2 class="text-2xl font-bold text-purple-400 mb-4">Application Panel</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
+                <p class="text-gray-400">Application 面板用於管理網頁應用的客戶端儲存空間、Service Workers、快取資源等。可檢視並修改各種儲存資料，適合調試 PWA 與資料持久化功能。</p>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 各儲存方式的差異</h3>
+                <ul class="list-disc list-inside text-gray-400 space-y-1">
+                    <li><strong>Cookies：</strong>隨 HTTP 請求自動發送，有過期時間（伺服器+客戶端）</li>
+                    <li><strong>Local Storage：</strong>永久儲存，僅客戶端存取，容量約 5-10MB</li>
+                    <li><strong>Session Storage：</strong>分頁關閉即清除，不跨頁面共享</li>
+                    <li><strong>IndexedDB：</strong>結構化資料庫，支援索引與查詢，容量更大</li>
+                </ul>
+            </div>
+        `
     },
     { 
         id: 3, 
@@ -334,13 +371,23 @@ const challenges = [
         fragment: '20', 
         completed: false,
         hint: '開啟 Performance 面板錄製，找出長條的紅色 task，尋找 window.stopLag() 函式',
-        knowledge: `<h2 class="text-2xl font-bold text-yellow-400 mb-4">Performance Panel</h2>
-                    <p class="text-gray-300 mb-4">用於分析網頁運行效能，找出卡頓原因。</p>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li><strong>Flame Chart (火焰圖):</strong> 顯示函式呼叫堆疊與時間</li>
-                        <li><strong>Long Tasks:</strong> 執行超過 50ms 的任務，會包含紅色標記</li>
-                        <li><strong>Layout Shift:</strong> 視覺元素的不預期指動</li>
-                    </ul>`
+        knowledge: `
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4">Performance Panel</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
+                <p class="text-gray-400">Performance 面板用於錄製並分析網頁運行時的效能問題，包括 JavaScript 執行、渲染流程、網路活動等。透過火焰圖（Flame Chart）可視覺化函式呼叫堆疊與耗時。</p>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <ul class="list-disc list-inside text-gray-400 space-y-1">
+                    <li><strong>vs Console：</strong>提供完整時間軸與視覺化分析，而非單點數值</li>
+                    <li><strong>vs Lighthouse：</strong>手動錄製特定操作，Lighthouse 是自動化的整體評分</li>
+                    <li><strong>vs Sources 斷點：</strong>不中斷執行，以全局視角分析效能瓶頸</li>
+                </ul>
+            </div>
+        `
     },
     { 
         id: 4, 
@@ -350,15 +397,24 @@ const challenges = [
         color: 'green', 
         fragment: '2026', 
         completed: false, 
-        hint: '步驟：1) Block 頻繁的 404 雜訊請求 2) 找到成功的 hint-override.json，查看 Response 3) 使用 Local Overrides override /secret-data.json 4) 重新載入頁面，隱藏碎片會出現',
-        knowledge: `<h2 class="text-2xl font-bold text-green-400 mb-4">Network Panel & Overrides</h2>
-                    <p class="text-gray-300 mb-4">監控所有網路請求與資源載入狀況，並可攔截和修改請求。</p>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li><strong>Filter (過濾):</strong> 依類型 (XHR/JS/Img) 或關鍵字篩選請求</li>
-                        <li><strong>Block Requests:</strong> 右鍵點擊請求可阻擋特定 URL 或 domain</li>
-                        <li><strong>Status Codes:</strong> 200 (成功), 404 (找不到), 500 (伺服器錯誤)</li>
-                        <li><strong>Local Overrides:</strong> 在本地修改和保存 API response，用於測試和除錯</li>
-                    </ul>`
+        hint: '步驟：1) Block 頻繁的雜訊請求 2) 找到成功的 hint-override.json，查看 Response 3) 使用 Local Overrides override /secret-data.json 4) 重新載入頁面，隱藏碎片會出現',
+        knowledge: `
+            <h2 class="text-2xl font-bold text-green-400 mb-4">Network Panel & Overrides</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
+                <p class="text-gray-400">Network 面板監控所有 HTTP/HTTPS 請求，顯示請求時序、狀態碼、回應內容、資源大小等。可用於調試 API、分析載入效能、模擬網路環境（節流、離線）。</p>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <ul class="list-disc list-inside text-gray-400 space-y-1">
+                    <li><strong>vs Application：</strong>Network 追蹤動態請求，Application 管理靜態儲存</li>
+                    <li><strong>vs Sources Overrides：</strong>Network 可 Block 請求，Sources Override 可修改回應內容</li>
+                    <li><strong>Block vs Override：</strong>Block 阻止請求發送，Override 替換伺服器回應</li>
+                </ul>
+            </div>
+        `
     },
     { 
         id: 5, 
@@ -369,13 +425,23 @@ const challenges = [
         fragment: null, 
         completed: false, 
         hint: '這一步沒有密碼碎片，你的任務是讓 [緊急解除] 按鈕生效。開啟 Sources 面板，Debug submitPassword 函式。',
-        knowledge: `<h2 class="text-2xl font-bold text-red-500 mb-4">Sources Panel & Debugging</h2>
-                    <p class="text-gray-300 mb-4">擁有強大的程式碼除錯與修改能力。</p>
-                    <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li><strong>Breakpoints:</strong> 暫停程式執行以檢查變數</li>
-                        <li><strong>Local Overrides:</strong> 直接在 DevTools 修改程式碼並持久保存</li>
-                        <li><strong>Step Over/Into:</strong> 逐行執行程式碼</li>
-                    </ul>`
+        knowledge: `
+            <h2 class="text-2xl font-bold text-red-500 mb-4">Sources Panel & Debugging</h2>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
+                <p class="text-gray-400">Sources 面板是最強大的程式碼調試工具，支援設定中斷點、逐步執行、變數監控、程式碼修改與持久化（Local Overrides）。可直接在瀏覽器中修改生產環境的代碼進行測試。</p>
+            </div>
+            
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <ul class="list-disc list-inside text-gray-400 space-y-1">
+                    <li><strong>vs Console：</strong>Sources 可中斷執行流程，Console 只能即時查看</li>
+                    <li><strong>vs Network Override：</strong>Sources 修改 JS/CSS 程式碼，Network 修改 API 回應</li>
+                    <li><strong>Breakpoint vs Live Expression：</strong>斷點暫停執行以檢查狀態，Live Expression 持續監控</li>
+                </ul>
+            </div>
+        `
     }
 ];
 
@@ -458,6 +524,13 @@ window.closeModal = function() {
     modal.querySelector('div').classList.add('scale-95');
     modal.querySelector('div').classList.remove('scale-100');
     setTimeout(() => modal.classList.add('hidden', 'pointer-events-none'), 300);
+}
+
+// === Close Modal on Background Click ===
+window.closeModalOnBackdrop = function(event) {
+    if (event.target.id === 'knowledge-modal') {
+        closeModal();
+    }
 }
 
 window.showHint = function(id) {
@@ -558,6 +631,7 @@ setInterval(() => {
 
 // --- Level 3: Performance ---
 const perfIndicator = $('#performance-indicator');
+const fuseSparkEl = document.getElementById('fuse-spark'); // 新增：引信火花元素
 let lagSequenceScheduled = false;
 
 function scheduleLagSequence() {
@@ -571,27 +645,39 @@ function scheduleLagSequence() {
 }
 
 window.startLag = function() {
+    // === 舊的旋轉圓圈效果（保留但隱藏） ===
     if (perfIndicator) {
-        perfIndicator.style.opacity = '1';
-        perfIndicator.classList.add('lag-warning');
+        perfIndicator.style.opacity = '0'; // 改為隱藏
     }
+    
+    // === 新的引信火花卡頓效果 ===
+    if (fuseSparkEl) {
+        fuseSparkEl.classList.add('lag-active');
+    }
+    
     window.lagInterval = setInterval(() => {
         const start = Date.now();
-        // 恭喜你找到問題了！ 請在 console 執行 window.stopLag() 來停止
-        while (Date.now() - start < 120) { Math.sqrt(Math.random()); }
-        if (perfIndicator) {
-             perfIndicator.style.transform = `translate(-50%, -50%) rotate(${Date.now() % 360}deg) scale(${1 + Math.random() * 0.15})`;
+        // 恭喜你找到問題了！請在 console 執行 window.stopLag() 來停止
+        while (Date.now() - start < 120) { 
+            Math.sqrt(Math.random()); 
         }
     }, 180);
 }
+
 window.stopLag = function() {
     clearInterval(window.lagInterval);
-    if (perfIndicator) {
-        perfIndicator.style.opacity = '0.3';
-        perfIndicator.style.animation = 'none';
-        perfIndicator.style.borderColor = '#4caf50';
-        perfIndicator.classList.remove('lag-warning');
+    
+    // === 移除卡頓效果，顯示修復狀態 ===
+    if (fuseSparkEl) {
+        fuseSparkEl.classList.remove('lag-active');
+        fuseSparkEl.classList.add('fixed-state'); // 綠色濾鏡
     }
+    
+    // 舊的指示器保持隱藏
+    if (perfIndicator) {
+        perfIndicator.style.opacity = '0';
+    }
+    
     console.log('✅ 效能優化完成！取得碎片: 20'); 
     markChallengeComplete(3);
 }
@@ -668,7 +754,7 @@ function startNetworkChaos() {
     noiseInterval = setInterval(() => {
         fetch('/noise-signal-404.json')
             .then(() => {
-                // 404 但請求成功發出，持續製造噪音
+                // 請求成功發出，持續製造噪音
             })
             .catch(() => {
                 // 只有被 DevTools Block 時才會進入這裡
@@ -703,7 +789,7 @@ function startNetworkChaos() {
                 }
             }
         } catch (e) {
-            // 404 或其他錯誤，繼續等待
+            // 失敗或其他錯誤，繼續等待
         }
     }, 5000);
 }
@@ -774,11 +860,28 @@ window.submitPassword = function() {
 // ==================== Keyboard Shortcuts ====================
 // 右方向鍵觸發駭客對話下一步
 document.addEventListener('keydown', function(e) {
+    const target = e.target;
+    const isEditable = target && (target.isContentEditable || target.tagName === 'INPUT' || target.tagName === 'TEXTAREA');
+    if (isEditable) return;
+
+    // ESC 鍵關閉 modal
+    if (e.key === 'Escape') {
+        const modal = $('#knowledge-modal');
+        if (modal && !modal.classList.contains('hidden')) {
+            e.preventDefault();
+            closeModal();
+            return;
+        }
+    }
+    
     if (e.key === 'ArrowRight') {
         if (canAdvanceFromCurrent()) {
             e.preventDefault();
             advanceNarrative();
         }
+    } else if (e.code === 'Space') {
+        e.preventDefault();
+        playSceneAudio(story[currentStoryIndex]);
     } else if (e.key === 'ArrowLeft') {
         if (currentStoryIndex > 0) {
             e.preventDefault();

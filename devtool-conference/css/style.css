@@ -458,3 +458,26 @@
 .message.active {
   display: block;
 }
+
+/* ==================== Fuse Spark Enhanced Effects ==================== */
+#fuse-spark.lag-active .animate-pulse-fast {
+  animation: spark-stutter 0.3s steps(3) infinite !important;
+}
+
+#fuse-spark.lag-active .animate-ping {
+  animation: ping-stutter 0.5s steps(2) infinite !important;
+}
+
+#fuse-spark.fixed-state {
+  filter: hue-rotate(100deg);
+}
+
+@keyframes spark-stutter {
+  0%, 50% { opacity: 1; transform: scale(1); }
+  51%, 100% { opacity: 0.3; transform: scale(0.85); }
+}
+
+@keyframes ping-stutter {
+  0% { opacity: 1; transform: scale(1); }
+  50%, 100% { opacity: 0; transform: scale(1.5); }
+}
