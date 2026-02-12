@@ -317,19 +317,18 @@ const challenges = [
         completed: false,
         hint: '開啟 Console，點擊眼睛圖示 (Create Live Expression)，輸入 "window.game.timer"',
         knowledge: `
-            <h2 class="text-2xl font-bold text-blue-400 mb-4">Console: Live Expressions</h2>
+            <h2 class="text-2xl font-bold text-blue-400 mb-4">Console: Log Methods & Live Expressions</h2>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
-                <p class="text-gray-400">Console 是瀏覽器的即時 JavaScript 執行環境（REPL），可用於調試、監控變數、執行測試代碼。Live Expressions 功能允許即時監控表達式的值，無需重複輸入指令。</p>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 核心概念：動態觀測 vs 靜態紀錄</h3>
+                <p class="text-gray-400">Console 不僅僅是 log 的輸出地。透過不同的工具，我們可以選擇觀察 "當下瞬間" 的狀態，或是 "持續監控" 數值的變化。</p>
             </div>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 同性質比較：觀測方式差異</h3>
                 <ul class="list-disc list-inside text-gray-400 space-y-1">
-                    <li><strong>vs Sources 斷點：</strong>Console 不需中斷程式執行，適合即時查看</li>
-                    <li><strong>vs Performance 面板：</strong>Console 只顯示當前值，不記錄歷史軌跡</li>
-                    <li><strong>vs Network 面板：</strong>Console 用於查看程式內部狀態，而非網路請求</li>
+                    <li><strong>console.log()：</strong>靜態快照。紀錄的是程式執行那一瞬間的變數狀態（但要注意物件參考特性），適合查看歷史軌跡。</li>
+                    <li><strong>Live Expression (眼睛圖示)：</strong>動態監控。表達式會釘選在 Console 頂部，隨時自動更新並顯示"當前最新"的值，適合監控變化的狀態（如計時器、座標）。</li>
                 </ul>
             </div>
         `
@@ -344,20 +343,20 @@ const challenges = [
         completed: false, 
         hint: '密碼碎片分散在 4 個儲存位置：Cookies、Local Storage、Session Storage、IndexedDB。收集 4 個提示並組合成完整碎片，然後呼叫 window.game.verifyLevel2("碎片") 驗證',
         knowledge: `
-            <h2 class="text-2xl font-bold text-purple-400 mb-4">Application Panel</h2>
+            <h2 class="text-2xl font-bold text-purple-400 mb-4">Application: Storage Strategies</h2>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
-                <p class="text-gray-400">Application 面板用於管理網頁應用的客戶端儲存空間、Service Workers、快取資源等。可檢視並修改各種儲存資料，適合調試 PWA 與資料持久化功能。</p>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 核心概念：客戶端儲存機制</h3>
+                <p class="text-gray-400">瀏覽器提供了多種儲存資料的方式，每種方式都有其特定的用途、容量限制與生命週期。</p>
             </div>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 各儲存方式的差異</h3>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 同性質比較：儲存方案差異</h3>
                 <ul class="list-disc list-inside text-gray-400 space-y-1">
-                    <li><strong>Cookies：</strong>隨 HTTP 請求自動發送，有過期時間（伺服器+客戶端）</li>
-                    <li><strong>Local Storage：</strong>永久儲存，僅客戶端存取，容量約 5-10MB</li>
-                    <li><strong>Session Storage：</strong>分頁關閉即清除，不跨頁面共享</li>
-                    <li><strong>IndexedDB：</strong>結構化資料庫，支援索引與查詢，容量更大</li>
+                    <li><strong>Cookies：</strong>容量極小 (4KB)，每次 HTTP 請求都會自動夾帶，主要用於伺服器驗證與狀態維持。</li>
+                    <li><strong>Local Storage：</strong>容量較大 (5-10MB)，永久儲存直到被清除，純客戶端存取，適合儲存使用者偏好設定。</li>
+                    <li><strong>Session Storage：</strong>容量同 Local Storage，但生命週期僅限於「當前分頁」。分頁關閉即消失，適合暫存表單資料。</li>
+                    <li><strong>IndexedDB：</strong>非同步、物件導向的資料庫。容量大且支援索引與交易 (Transaction)，適合儲存離線應用 (PWA) 的大量結構化資料。</li>
                 </ul>
             </div>
         `
@@ -372,19 +371,19 @@ const challenges = [
         completed: false,
         hint: '開啟 Performance 面板錄製，找出長條的紅色 task，尋找 window.stopLag() 函式',
         knowledge: `
-            <h2 class="text-2xl font-bold text-yellow-400 mb-4">Performance Panel</h2>
+            <h2 class="text-2xl font-bold text-yellow-400 mb-4">Performance: Runtime Metrics</h2>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
-                <p class="text-gray-400">Performance 面板用於錄製並分析網頁運行時的效能問題，包括 JavaScript 執行、渲染流程、網路活動等。透過火焰圖（Flame Chart）可視覺化函式呼叫堆疊與耗時。</p>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 核心概念：執行成本分析 (Flame Chart)</h3>
+                <p class="text-gray-400">效能面板的火焰圖透過顏色區分不同的瀏覽器工作。優化的第一步是識別哪種顏色的工作佔用了主執行緒 (Main Thread) 的時間。</p>
             </div>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 同性質比較：任務類型 (顏色) 差異</h3>
                 <ul class="list-disc list-inside text-gray-400 space-y-1">
-                    <li><strong>vs Console：</strong>提供完整時間軸與視覺化分析，而非單點數值</li>
-                    <li><strong>vs Lighthouse：</strong>手動錄製特定操作，Lighthouse 是自動化的整體評分</li>
-                    <li><strong>vs Sources 斷點：</strong>不中斷執行，以全局視角分析效能瓶頸</li>
+                    <li><strong><span class="text-yellow-400">黃色 (Scripting)</span>：</strong>JavaScript 執行。包含事件處理、API 呼叫、邏輯運算。優化方向：Code Splitting, Web Workers, 演算法優化。</li>
+                    <li><strong><span class="text-purple-400">紫色 (Rendering)</span>：</strong>樣式計算 (Recalculate Style) 與佈局 (Layout/Reflow)。優化方向：減少 DOM 操作, 避免 Layout Thrashing。</li>
+                    <li><strong><span class="text-green-400">綠色 (Painting)</span>：</strong>繪製與合成 (Paint & Composite)。優化方向：使用已提升的圖層 (GPU 加速), 減少重繪區域。</li>
                 </ul>
             </div>
         `
@@ -395,23 +394,23 @@ const challenges = [
         desc: 'Network 面板', 
         icon: 'wifi', 
         color: 'green', 
-        fragment: '2026', 
+        fragment: '26', 
         completed: false, 
         hint: '步驟：1) Block 頻繁的雜訊請求 2) 找到成功的 hint-override.json，查看 Response 3) 使用 Local Overrides override /secret-data.json 4) 重新載入頁面，隱藏碎片會出現',
         knowledge: `
-            <h2 class="text-2xl font-bold text-green-400 mb-4">Network Panel & Overrides</h2>
+            <h2 class="text-2xl font-bold text-green-400 mb-4">Network: Request Interception</h2>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
-                <p class="text-gray-400">Network 面板監控所有 HTTP/HTTPS 請求，顯示請求時序、狀態碼、回應內容、資源大小等。可用於調試 API、分析載入效能、模擬網路環境（節流、離線）。</p>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 核心概念：網路行為修改</h3>
+                <p class="text-gray-400">不需等待後端 API 修改，前端開發者可以直接在瀏覽器層面介入與修改網路請求，以模擬各種情境。</p>
             </div>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 同性質比較：介入策略差異</h3>
                 <ul class="list-disc list-inside text-gray-400 space-y-1">
-                    <li><strong>vs Application：</strong>Network 追蹤動態請求，Application 管理靜態儲存</li>
-                    <li><strong>vs Sources Overrides：</strong>Network 可 Block 請求，Sources Override 可修改回應內容</li>
-                    <li><strong>Block vs Override：</strong>Block 阻止請求發送，Override 替換伺服器回應</li>
+                    <li><strong>Block Request URL (阻擋)：</strong>完全阻止請求發送。模擬資源遺失、伺服器掛掉或是第三方追蹤腳本被阻擋的情境。(破壞性測試)</li>
+                    <li><strong>Network Throttling (節流)：</strong>限制頻寬與延遲。模擬 3G/4G 慢速網路或離線狀態，測試載入體驗與 Timeout 處理。(效能測試)</li>
+                    <li><strong>Local Overrides (覆寫)：</strong>攔截請求並返回本地定義的內容。模擬 API 回傳特定資料（如錯誤訊息、特定邊界值），從而測試前端邏輯。(功能測試/Mocking)</li>
                 </ul>
             </div>
         `
@@ -426,19 +425,20 @@ const challenges = [
         completed: false, 
         hint: '這一步沒有密碼碎片，你的任務是讓 [緊急解除] 按鈕生效。開啟 Sources 面板，Debug submitPassword 函式。',
         knowledge: `
-            <h2 class="text-2xl font-bold text-red-500 mb-4">Sources Panel & Debugging</h2>
+            <h2 class="text-2xl font-bold text-red-500 mb-4">Sources: Breakpoint Strategies</h2>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 工具特性</h3>
-                <p class="text-gray-400">Sources 面板是最強大的程式碼調試工具，支援設定中斷點、逐步執行、變數監控、程式碼修改與持久化（Local Overrides）。可直接在瀏覽器中修改生產環境的代碼進行測試。</p>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">🎯 核心概念：中斷點類型</h3>
+                <p class="text-gray-400">Debug 不只是在某一行暫停。善用不同類型的斷點，可以精準捕捉問題發生的瞬間，過濾不必要的雜訊。</p>
             </div>
             
             <div class="mb-4">
-                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 與其他工具的差異</h3>
+                <h3 class="text-lg font-semibold text-gray-200 mb-2">⚖️ 同性質比較：斷點觸發時機</h3>
                 <ul class="list-disc list-inside text-gray-400 space-y-1">
-                    <li><strong>vs Console：</strong>Sources 可中斷執行流程，Console 只能即時查看</li>
-                    <li><strong>vs Network Override：</strong>Sources 修改 JS/CSS 程式碼，Network 修改 API 回應</li>
-                    <li><strong>Breakpoint vs Live Expression：</strong>斷點暫停執行以檢查狀態，Live Expression 持續監控</li>
+                    <li><strong>Line Breakpoint (行斷點)：</strong>最基礎的斷點。執行到該行程式碼時暫停。</li>
+                    <li><strong>Conditional Breakpoint (條件斷點)：</strong>"只有當..."才暫停。例如 <code>id === 'bug'</code>。適合在迴圈或頻繁觸發的事件中過濾雜訊，大幅節省 Debug 時間。</li>
+                    <li><strong>DOM Breakpoint：</strong>當 HTML 元素被修改（屬性變更、子節點移除）時暫停。適合尋找 "是誰偷偷改了我的介面？" 的 UI Bug。</li>
+                    <li><strong>XHR/Fetch Breakpoint：</strong>當特定 URL 的網路請求發送時暫停。適合追蹤請求發送的起點與堆疊。</li>
                 </ul>
             </div>
         `
@@ -578,7 +578,7 @@ function updateTimerDisplay(overrideText) {
 }
 
 // 先初始化 window.game 物件
-window.game = { timeLeft: 900, _internalTimer: 900 };
+window.game = { timeLeft: 1200, _internalTimer: 1200 };
 
 // --- Manual Fragment Verification (Level 2 & 4) ---
 window.game.foundFragment = function(levelId, password) {
@@ -634,6 +634,55 @@ const perfIndicator = $('#performance-indicator');
 const fuseSparkEl = document.getElementById('fuse-spark'); // 新增：引信火花元素
 let lagSequenceScheduled = false;
 
+// 初始化：移除 CSS 動畫，改用 JS 驅動以確保卡頓效果
+let animFrameId;
+if (perfIndicator) {
+    perfIndicator.style.opacity = '0.8'; 
+    perfIndicator.classList.remove('pointer-events-none');
+    
+    // JS Driven Animation State (Time Based to match CSS ease-in-out)
+    const startTime = Date.now();
+    const duration = 3000; // 3s per direction
+    
+    function animateIndicator() {
+        const now = Date.now();
+        const elapsed = now - startTime;
+        const cycleTime = elapsed % (duration * 2); // 6s cycle
+        
+        let progress; // 0 to 1
+        let isForward = cycleTime < duration;
+        
+        if (isForward) {
+            // Forward (0 -> 1)
+            progress = cycleTime / duration;
+        } else {
+            // Backward (1 -> 0)
+            progress = 1 - ((cycleTime - duration) / duration);
+        }
+        
+        // Easing: Ease-in-out approximation using Cosine
+        // 0.5 * (1 - cos(p * PI)) maps 0->0, 0.5->0.5, 1->1 with smooth curve
+        const easedProgress = 0.5 * (1 - Math.cos(progress * Math.PI));
+        
+        // Interpolate values
+        // Range: -180px to 180px
+        const translateX = -180 + (360 * easedProgress);
+        // Range: 0deg to 360deg
+        const rotation = 360 * easedProgress;
+
+        // Apply styles directly
+        // Inner Element: Spin & Translate
+        // Note: CSS uses transform to center (-50%, -50%). We must keep that.
+        perfIndicator.style.transform = `translate(-50%, -50%) translateX(${translateX}px) rotate(${rotation}deg)`;
+        perfIndicator.style.animation = 'none'; // Ensure CSS is off
+
+        animFrameId = requestAnimationFrame(animateIndicator);
+    }
+    
+    // Start animation loop
+    animFrameId = requestAnimationFrame(animateIndicator);
+}
+
 function scheduleLagSequence() {
     if (lagSequenceScheduled) return;
     lagSequenceScheduled = true;
@@ -645,23 +694,23 @@ function scheduleLagSequence() {
 }
 
 window.startLag = function() {
-    // === 舊的旋轉圓圈效果（保留但隱藏） ===
-    if (perfIndicator) {
-        perfIndicator.style.opacity = '0'; // 改為隱藏
-    }
+    // === 舊的旋轉圓圈效果（現在作為效能指標） ===
+    // 保持顯示，因為它現在是我們 observation 的重點
     
     // === 新的引信火花卡頓效果 ===
     if (fuseSparkEl) {
         fuseSparkEl.classList.add('lag-active');
     }
     
+    // 恭喜你找到問題了！請在 console 執行 window.stopLag() 來停止
+    // 增加計算量以確保主執行緒卡頓，導致旋轉動畫掉幀
     window.lagInterval = setInterval(() => {
         const start = Date.now();
-        // 恭喜你找到問題了！請在 console 執行 window.stopLag() 來停止
-        while (Date.now() - start < 120) { 
+        // 增加阻塞時間到 180ms (超過 16.7ms 就會掉幀, 180ms 會非常明顯)
+        while (Date.now() - start < 180) { 
             Math.sqrt(Math.random()); 
         }
-    }, 180);
+    }, 200); // 每 200ms 執行一次，幾乎佔滿時間
 }
 
 window.stopLag = function() {
@@ -673,9 +722,10 @@ window.stopLag = function() {
         fuseSparkEl.classList.add('fixed-state'); // 綠色濾鏡
     }
     
-    // 舊的指示器保持隱藏
+    // 指示器變為綠色，表示效能優化完成
     if (perfIndicator) {
-        perfIndicator.style.opacity = '0';
+        perfIndicator.style.borderColor = '#10b981'; // green-500
+        perfIndicator.style.boxShadow = '0 0 15px #10b981';
     }
     
     console.log('✅ 效能優化完成！取得碎片: 20'); 
@@ -746,6 +796,7 @@ let noiseInterval;
 let hintOverrideTimeout;
 let secretDataInterval;
 let networkChaosStarted = false;
+let isSystemIntegrityCheckPassed = false;
 
 function startNetworkChaos() {
     if (networkChaosStarted) return;
@@ -775,15 +826,25 @@ function startNetworkChaos() {
 
     secretDataInterval = setInterval(async () => {
         try {
-            const res = await fetch('/secret-data.json');
+            const res = await fetch('/api/secret-data');
             if (res.ok) {
                 const data = await res.json();
-                if (data.SECRET_CODE_FRAGMENT) {
+                
+                // 檢查是否成功解鎖 (status === 'unlocked')
+                if (data.status === 'unlocked' && data.SECRET_CODE_FRAGMENT) {
                     const hiddenFragment = document.getElementById('hidden-fragment');
-                    if (hiddenFragment) {
+                    if (hiddenFragment && hiddenFragment.classList.contains('hidden')) {
                         hiddenFragment.classList.remove('hidden');
                         console.log('%c🎉 API Override 成功！', 'color: #10b981; font-size: 16px; font-weight: bold;');
                         console.log('%c隱藏的碎片已經出現在頁面上了！', 'color: #60a5fa; font-size: 14px;');
+                        
+                        // 顯示提示卡片
+                        showMessage('success', `成功解除鎖定！取得密碼碎片: [ ${data.SECRET_CODE_FRAGMENT} ]`);
+                        
+                        // 標記關卡完成 (如果還沒完成)
+                        // 這裡假設這屬於 Level 4 (Network) 的一部分或是隱藏任務
+                        // 如果有對應的 challenge ID，可以呼叫 markChallengeComplete
+                        
                         clearInterval(secretDataInterval);
                     }
                 }
@@ -819,8 +880,6 @@ window.submitPassword = function() {
 
     // ⚠️ BUG: 系統驗證邏輯錯誤！
     // 💡 提示: 將下方的 false 改成 true 即可解鎖系統
-    const isSystemIntegrityCheckPassed = false; 
-    
     if (isSystemIntegrityCheckPassed) {
         markChallengeComplete(5);
         showMessage('success', '🎉 系統解鎖成功！炸彈已拆除！');

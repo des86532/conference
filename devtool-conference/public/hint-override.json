@@ -4,13 +4,13 @@
   "steps": [
     "1. 在 Network 面板找到 /secret-data.json 請求",
     "2. 右鍵點擊 → Override content",
-    "3. 修改 response 內容為成功的 JSON",
+    "3. 修改 response 內容為成功的 JSON(override_template)",
     "4. 重新載入頁面"
   ],
   "hint": "成功 override 後，頁面上會出現隱藏的密碼碎片...",
   "override_template": {
     "status": "unlocked",
-    "SECRET_CODE_FRAGMENT": "2026",
+    "SECRET_CODE_FRAGMENT": "26",
     "message": "恭喜！你成功 override 了 API response！"
   }
 }
