@@ -1,10 +1,8 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  // Base path for GitHub Pages deployment
-  // If deploying to username.github.io/repo-name/, set base to '/repo-name/'
-  // For now, assuming root or relative
-  base: './', 
+  // Base path for GitHub Pages deployment under des86532.github.io/conference
+  base: '/conference/', 
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
