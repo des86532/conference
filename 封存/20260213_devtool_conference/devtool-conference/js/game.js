@@ -6,6 +6,15 @@ const sceneAudio = new Audio();
 sceneAudio.preload = 'auto';
 sceneAudio.volume = 1.0;
 
+// Helper to resolve assets respecting Vite base (works even if BASE_URL is relative)
+const baseAssetUrl = (() => {
+    const baseEnv = import.meta?.env?.BASE_URL || '/';
+    // Ensure absolute URL so URL constructor never throws
+    return new URL(baseEnv, window.location.origin).href;
+})();
+
+const toAssetUrl = (path) => new URL(path, baseAssetUrl).href;
+
 // Helper for selecting elements
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector); // For multiple lists
@@ -129,7 +138,7 @@ function playSceneAudio(scene) {
     if (!scene || scene.id === undefined || scene.id === null) return;
     sceneAudio.pause();
     sceneAudio.currentTime = 0;
-    sceneAudio.src = `/audio/id-${scene.id}.mp3`;
+    sceneAudio.src = toAssetUrl(`audio/id-${scene.id}.mp3`);
     sceneAudio.play().catch(() => {});
 }
 
@@ -803,7 +812,7 @@ function startNetworkChaos() {
     networkChaosStarted = true;
 
     noiseInterval = setInterval(() => {
-        fetch('/noise-signal-404.json')
+        fetch(toAssetUrl('noise-signal-404.json'))
             .then(() => {
                 // 請求成功發出，持續製造噪音
             })
@@ -815,7 +824,7 @@ function startNetworkChaos() {
                 // 在成功 Block 後才發送 Hint
                 console.log('%c💡 雜訊消除，關鍵訊號浮現...', 'color: #fbbf24; font-size: 14px;');
                  setTimeout(() => {
-                    fetch('/hint-override.json').then(r => r.json()).then(() => {
+                    fetch(toAssetUrl('hint-override.json')).then(r => r.json()).then(() => {
                         // 讓使用者自行在 Network 面板發現
                     }).catch(() => {});
                 }, 1000);
@@ -826,7 +835,7 @@ function startNetworkChaos() {
 
     secretDataInterval = setInterval(async () => {
         try {
-            const res = await fetch('/api/secret-data');
+            const res = await fetch(toAssetUrl('api/secret-data'));
             if (res.ok) {
                 const data = await res.json();
                 
