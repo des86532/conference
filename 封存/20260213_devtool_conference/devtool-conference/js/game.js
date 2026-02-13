@@ -835,7 +835,7 @@ function startNetworkChaos() {
 
     secretDataInterval = setInterval(async () => {
         try {
-            const res = await fetch(toAssetUrl('api/secret-data.json'));
+            const res = await fetch(toAssetUrl('secret-data.json'));
             if (res.ok) {
                 const data = await res.json();
                 
