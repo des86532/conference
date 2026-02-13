@@ -793,4 +793,4 @@ window.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Enter") window.submitPassword();
   });
 });
-//# sourceMappingURL=index-BjBVnBNW.js.map
+//# sourceMappingURL=index.js.map
