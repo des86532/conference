@@ -689,6 +689,7 @@ window.game.verifyLevel2 = function(answer) {
 let noiseInterval;
 let secretDataInterval;
 let networkChaosStarted = false;
+window.isSystemIntegrityCheckPassed = window.isSystemIntegrityCheckPassed || false;
 function startNetworkChaos() {
   if (networkChaosStarted) return;
   networkChaosStarted = true;
@@ -742,7 +743,19 @@ window.submitPassword = function() {
     setTimeout(() => input.classList.remove("animate-shake"), 500);
     return;
   }
-  {
+  if (window.isSystemIntegrityCheckPassed) {
+    markChallengeComplete(5);
+    showMessage("success", "🎉 系統解鎖成功！炸彈已拆除！");
+    const timerEl = $("#timer");
+    if (timerEl) timerEl.classList.add("text-green-500");
+    updateTimerDisplay("DEFUSED");
+    input.disabled = true;
+    input.classList.add("text-green-500", "border-green-500");
+    $("#defuse-btn").classList.add("bg-green-500", "hover:bg-green-600");
+    const finalStoryIndex = 12;
+    furthestStoryIndex = Math.max(furthestStoryIndex, finalStoryIndex);
+    syncNavigation();
+  } else {
     if (currentStoryIndex === 10) {
       story10PasswordAttempted = true;
       if (furthestStoryIndex < 11) {
