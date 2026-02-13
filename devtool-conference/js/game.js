@@ -36,7 +36,7 @@ const story = [
     // === 前言 ===
     { 
         id: 0, 
-        text: "看來這棟大樓的命運掌握在你手裡了... 讓我看看你有多少本事。", 
+        text: "看來這場分享會的命運掌握在你手裡了... 讓我看看你有多少本事。", 
         autoNext: false 
     },
     { 
@@ -110,7 +110,7 @@ const story = [
     // === 最終勝利 ===
     {
         id: 12,
-        text: "不可能... 我的邏輯鎖... 竟然被破解了？！<br><span class='text-green-500 text-xl font-bold'>🎉 恭喜！你已成功守護了這場大會！</span>",
+        text: "不可能... 我的邏輯鎖... 竟然被破解了？！<br><span class='text-green-500 text-xl font-bold'>🎉 恭喜！你已成功守護了這場分享會！</span>",
         triggerLevel: 5,  // 只有完成關卡五後才能到達
         isFinal: true
     }
@@ -889,10 +889,10 @@ window.submitPassword = function() {
         input.disabled = true;
         input.classList.add('text-green-500', 'border-green-500');
         $('#defuse-btn').classList.add('bg-green-500', 'hover:bg-green-600');
-        // 推進到最終勝利對話（Story ID 12）
-        currentStoryIndex = 12;
-        furthestStoryIndex = Math.max(furthestStoryIndex, currentStoryIndex);
-        advanceNarrative();
+        // 解鎖最終勝利對話（Story ID 12），讓玩家自行點擊下一步
+        const finalStoryIndex = 12;
+        furthestStoryIndex = Math.max(furthestStoryIndex, finalStoryIndex);
+        syncNavigation();
     } else {
         // 推進到關卡五提示對話（Story ID 11）
         // 如果當前是在「輸入密碼試試看」(ID 10)
